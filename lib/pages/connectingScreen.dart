@@ -1,5 +1,6 @@
 // import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_openvpn/flutter_openvpn.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -13,6 +14,7 @@ class ConnectingScreen extends StatefulWidget {
 
 class _ConnectingScreenState extends State<ConnectingScreen> {
   final _formkey = GlobalKey<FormState>();
+  var contennt;
   @override
   void initState() {
     super.initState();
@@ -20,22 +22,20 @@ class _ConnectingScreenState extends State<ConnectingScreen> {
   }
 
   Future<void> initPlatformState() async {
-    await FlutterOpenvpn.init(
-      localizedDescription: "KUBRI",
-      providerBundleIdentifier: "com.example.vpnApp.RunnerExtension",
-    ).then((value) async {
+    contennt = await rootBundle.loadString('assets/icons/client.ovpn');
+    await FlutterOpenvpn.init().then((value) async {
       print(value);
       Fluttertoast.showToast(msg: value.toString(), textColor: Colors.red);
       await FlutterOpenvpn.lunchVpn(
-        "3.86.230.13",
+        contennt,
         (isProfileLoaded) {
           print('isProfileLoaded : $isProfileLoaded');
         },
         (vpnActivated) {
           print('vpnActivated : $vpnActivated');
         },
-        user: 'openvpn',
-        pass: 'complicat3epa55',
+        user: "openvpn",
+        pass: "complicat3epa55",
         onConnectionStatusChanged:
             (duration, lastPacketRecieve, byteIn, byteOut) => print(byteIn),
         // expireAt: DateTime.now().add(
